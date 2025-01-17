@@ -1,0 +1,56 @@
+{
+    "name": "supertokens-plugin-user-banning",
+    "version": "0.0.1",
+    "description": "NodeJS driver for SuperTokens core",
+    "main": "index.js",
+    "scripts": {
+        "test": "TEST_MODE=testing npx mocha --node-option no-experimental-fetch -r test/fetch-polyfill.mjs --timeout 500000",
+        "test-exports": "./test/testExports.sh",
+        "build-check": "cd lib && npx tsc -p tsconfig.json --noEmit && cd ../test/with-typescript && npm run build",
+        "build": "cd backend/lib && rm -rf build && npx tsc -p tsconfig.json",
+        "pretty": "npx pretty-quick .",
+        "build-pretty": "npm run build && npm run pretty && npm run pretty",
+        "pretty-check": "npx pretty-quick --check ."
+    },
+    "keywords": [],
+    "exports": {
+        ".": {
+            "types": "./index.d.ts",
+            "default": "./index.js"
+        },
+        "./index": {
+            "types": "./index.d.ts",
+            "default": "./index.js"
+        },
+        "./index.js": {
+            "types": "./index.d.ts",
+            "default": "./index.js"
+        },
+        "./backend": {
+            "types": "./backend/index.d.ts",
+            "default": "./backend/index.js"
+        },
+        "./backend/index": {
+            "types": "./backend/index.d.ts",
+            "default": "./backend/index.js"
+        },
+        "./backend/index.js": {
+            "types": "./backend/index.d.ts",
+            "default": "./backend/index.js"
+        }
+    },
+    "license": "Apache-2.0",
+    "dependencies": {
+        "supertokens-node": "latest"
+    },
+    "devDependencies": {
+        "mocha": "^10.2.0",
+        "prettier": "2.0.5",
+        "pretty-quick": "^3.1.1",
+        "sinon": "^14.0.0",
+        "typescript": "^5.7.3"
+    },
+    "browser": {
+        "fs": false
+    }
+}
