@@ -2,17 +2,19 @@
 - Q: How do we make sure that a required recipe is installed (backend)?
 - A: When overring a recipe, set the `recipeInitRequired` field to `true`
 
+
 - Q: How do i add authorization?
 - A: You can use the `getAuthorisedUserId` or `isAUthroised` utility from `./utils`
+
 
 ### Known Issues
 - Throwing an error inside a handler will crash the server
 
 ### To Do (besides known issues)
-- [] Standardised error handling
-- [] Path matching in handlers. This means would allow REST style paths
-- [] Defined a better structure and better conventions for plugins.
-- [] Enforce guidelines
+- [ ] Standardised error handling
+- [ ] Path matching in handlers. This means would allow REST style paths
+- [ ] Defined a better structure and better conventions for plugins.
+- [ ] Enforce guidelines
 
 ### General Guidelines
 - Every plugin should have both/either folders: `backend`, `frontend`
