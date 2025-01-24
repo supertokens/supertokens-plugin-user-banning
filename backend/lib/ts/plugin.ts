@@ -1,8 +1,11 @@
 import { SuperTokensPlugin } from "supertokens-node/types";
+import SuperTokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
 import { PLUGIN_ID, HANDLE_BASE_PATH, PLUGIN_SDK_VERSION } from "./config";
 import { UserBanningService } from "./userBanningService";
-import { isAuthorised, sendUnauthorisedAccess } from "./utils";
+// import { isAuthorised, sendUnauthorisedAccess } from "./utils";
+
+// todo: feedback: have more exposed apis from the sdk - can't list users, cant get a user by email (or other fields), etc.
 
 export const init = (): SuperTokensPlugin => {
   const userBanningService = new UserBanningService();
@@ -14,34 +17,74 @@ export const init = (): SuperTokensPlugin => {
       {
         path: HANDLE_BASE_PATH + "/ban",
         method: "post",
-        handler: async (req, res, userContext) => {
+        handler: async (req, res, _, userContext) => {
           // make sure the user is allowed to ban other users
-          if (!(await isAuthorised(req, res, "admin"))) {
-            sendUnauthorisedAccess(res);
+          // if (!(await isAuthorised(req, res, "admin"))) {
+          //   sendUnauthorisedAccess(res);
+          //   return null;
+          // }
+
+          let tenantId = await req.getKeyValueFromQuery("tenantId");
+          if (!tenantId) {
+            res.setStatusCode(400);
+            res.sendJSONResponse({
+              status: "BAD_INPUT_ERROR",
+              message: "tenantId is required",
+            });
             return null;
           }
 
           // make sure the request is valid
-          const body = await req.getJSONBody();
-          if (!body.userId || typeof body.isBanned !== "boolean") {
+          const body: {
+            userId?: string;
+            email?: string;
+            isBanned: boolean;
+          } = await req.getJSONBody();
+          if (typeof body.isBanned !== "boolean") {
             res.setStatusCode(400);
             res.sendJSONResponse({
               status: "BAD_INPUT_ERROR",
-              message: "userId and isBanned are required",
+              message: "isBanned are required",
+            });
+            return null;
+          }
+
+          let userId: string | undefined;
+          if (body.userId) {
+            userId = body.userId;
+          } else if (body.email) {
+            const user = await SuperTokens.listUsersByAccountInfo(tenantId, {
+              email: body.email.toLowerCase(),
+            });
+            userId = user?.[0]?.id;
+          } else {
+            res.setStatusCode(400);
+            res.sendJSONResponse({
+              status: "BAD_INPUT_ERROR",
+              message: "userId or email is required",
+            });
+            return null;
+          }
+
+          if (!userId) {
+            res.setStatusCode(400);
+            res.sendJSONResponse({
+              status: "BAD_INPUT_ERROR",
+              message: "user not found",
             });
             return null;
           }
 
           // set the ban status
           const result = await userBanningService.setBanStatus(
-            body.userId,
+            userId,
             body.isBanned,
             userContext
           );
 
           // revoke all sessions if the user is banned
           if (body.isBanned) {
-            await Session.revokeAllSessionsForUser(body.userId);
+            await Session.revokeAllSessionsForUser(userId);
           }
 
           if (result.status === "OK") {
@@ -58,20 +101,45 @@ export const init = (): SuperTokensPlugin => {
       {
         path: HANDLE_BASE_PATH + "/ban",
         method: "get",
-        handler: async (req, res, userContext) => {
+        handler: async (req, res, _, userContext) => {
           // make sure the user is allowed to get the ban status
-          if (!(await isAuthorised(req, res, "admin"))) {
-            sendUnauthorisedAccess(res);
+          // if (!(await isAuthorised(req, res, "admin"))) {
+          //   sendUnauthorisedAccess(res);
+          //   return null;
+          // }
+
+          let tenantId = await req.getKeyValueFromQuery("tenantId");
+          if (!tenantId) {
+            res.setStatusCode(400);
+            res.sendJSONResponse({
+              status: "BAD_INPUT_ERROR",
+              message: "tenantId is required",
+            });
             return null;
           }
 
           // make sure the request is valid
-          const userId = await req.getKeyValueFromQuery("userId");
+          let userId: string | undefined = await req.getKeyValueFromQuery(
+            "userId"
+          );
+          let email: string | undefined = await req.getKeyValueFromQuery(
+            "email"
+          );
+
+          if (email) {
+            const user = await SuperTokens.listUsersByAccountInfo(tenantId, {
+              email: email.toLowerCase(),
+            });
+            userId = user?.[0]?.id;
+          }
+
+          userId = userId?.trim();
+
           if (!userId) {
             res.setStatusCode(400);
             res.sendJSONResponse({
               status: "BAD_INPUT_ERROR",
-              message: "userId and isBanned are required",
+              message: "userId or email is required",
             });
             return null;
           }
