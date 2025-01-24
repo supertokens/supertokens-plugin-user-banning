@@ -5,10 +5,7 @@ import { BanUserPage } from "./pages";
 
 // todo: feedback: need some util for calling the custom plugin api
 
-export const init = ({
-  apiDomain,
-  websiteDomain,
-}: {
+export const init = (_: {
   apiDomain: string;
   websiteDomain: string;
 }): SuperTokensPlugin => {
@@ -18,7 +15,7 @@ export const init = ({
       {
         path: "/admin/ban-user",
         // todo: feedback: it would be useful for the handler to have access to the st instance config, otherwise it's not possible to get the base path
-        handler: () => BanUserPage.call(null, { apiDomain, websiteDomain }),
+        handler: BanUserPage,
       },
     ],
     overrideMap: {

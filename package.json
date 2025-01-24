@@ -55,7 +55,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "supertokens-auth-react": "github:supertokens/supertokens-auth-react#feat/plugin/experiment-exports",
+    "supertokens-auth-react": "github:supertokens/supertokens-auth-react#feat/plugin/experiment",
     "supertokens-node": "github:supertokens/supertokens-node#feat/plugin/experiment"
   },
   "devDependencies": {
