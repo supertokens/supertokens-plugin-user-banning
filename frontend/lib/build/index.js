@@ -5,8 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var jsxRuntime = require('react/jsx-runtime');
 var react = require('react');
 
-var PLUGIN_ID = "supertokens-plugin-user-banning";
-
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -77,6 +75,8 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     var e = new Error(message);
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
+
+var PLUGIN_ID = "supertokens-plugin-user-banning";
 
 var post = function (basePath) { return function (path_1, body_1, _a) { return __awaiter(void 0, [path_1, body_1, _a], void 0, function (path, body, _b) {
     var queryParams, url, credentials, response, error_1, newError, payload, error, newError, payload;
@@ -218,12 +218,11 @@ var ThemeBase = function (_a) {
 };
 
 // todo: feedback: it would be useful to be able to use the supertokens components (buttons, inputs, boxes, cards, forms, etc).
-function BanUserPage() {
+function BanUserPage(props) {
     var _a = react.useState(), error = _a[0], setError = _a[1];
     var _b = react.useState("public"), tenantId = _b[0], setTenantId = _b[1];
     var _c = react.useState(), email = _c[0], setEmail = _c[1];
     var _d = react.useState(null), banStatus = _d[0], setBanStatus = _d[1];
-    var props = { apiDomain: "http://localhost:3001" };
     var querier = useQuerier(props.apiDomain);
     var scheduleErrorReset = react.useCallback(function () {
         setTimeout(function () {
@@ -285,18 +284,41 @@ function BanUserPage() {
 }
 
 // todo: feedback: need some util for calling the custom plugin api
-var init = function (_) {
+var init = function (_a) {
+    var apiDomain = _a.apiDomain;
     return {
         id: PLUGIN_ID,
         routeHandlers: [
             {
                 path: "/admin/ban-user",
                 // todo: feedback: it would be useful for the handler to have access to the st instance config, otherwise it's not possible to get the base path
-                handler: BanUserPage,
+                handler: function () { return BanUserPage.call(null, { apiDomain: apiDomain }); },
             },
         ],
         overrideMap: {
-            emailpassword: {},
+            emailpassword: {
+                functions: function (originalImplementation) {
+                    var _this = this;
+                    return __assign(__assign({}, originalImplementation), { signUp: function (input) {
+                            console.log("signUp", input);
+                            return originalImplementation.signUp(input);
+                        }, signIn: function (input) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                console.log("signIn", input);
+                                return [2 /*return*/, originalImplementation.signIn(input)];
+                            });
+                        }); } });
+                },
+            },
+            session: {
+                recipeInitRequired: true,
+                functions: function (originalImplementation) {
+                    return __assign(__assign({}, originalImplementation), { signOut: function (input) {
+                            console.log("signOut", input);
+                            return originalImplementation.signOut(input);
+                        } });
+                },
+            },
         },
     };
 };

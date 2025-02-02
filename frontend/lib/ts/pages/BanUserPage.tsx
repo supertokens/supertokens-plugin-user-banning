@@ -7,13 +7,12 @@ import { getErrorMessage, ThemeBase } from "../utils";
 
 // todo: feedback: it would be useful to be able to use the supertokens components (buttons, inputs, boxes, cards, forms, etc).
 
-export function BanUserPage() {
+export function BanUserPage(props: { apiDomain: string }) {
   const [error, setError] = useState<string | undefined>();
   const [tenantId, setTenantId] = useState("public");
   const [email, setEmail] = useState<string | undefined>();
   const [banStatus, setBanStatus] = useState<boolean | null>(null);
 
-  const props = { apiDomain: "http://localhost:3001" };
   const querier = useQuerier(props.apiDomain);
 
   const scheduleErrorReset = useCallback(() => {
