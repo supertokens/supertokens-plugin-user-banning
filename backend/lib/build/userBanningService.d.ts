@@ -1,13 +1,13 @@
-import { UserContext } from "supertokens-node/types";
+import { UserContext } from 'supertokens-node/types';
 export declare class UserBanningService {
     protected cache: Map<string, boolean>;
     constructor();
     getBanStatus(userId: string, userContext?: UserContext): Promise<{
-        status: "OK";
+        status: 'OK';
         banned: boolean | undefined;
     }>;
     setBanStatus(userId: string, isBanned: boolean, userContext?: UserContext): Promise<{
-        status: "OK";
+        status: 'OK';
     }>;
     setBanStatusToCache(userId: string, isBanned: boolean): void;
     getBanStatusFromCache(userId: string): boolean | undefined;

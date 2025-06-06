@@ -11,17 +11,18 @@ class UserBanningService {
         this.cache = new Map();
     }
     async getBanStatus(userId, userContext) {
+        var _a;
         const result = await usermetadata_1.default.getUserMetadata(userId, userContext);
         this.setBanStatusToCache(userId, result.metadata[config_1.USER_METADATA_BAN_STATUS_KEY]);
         return {
-            status: "OK",
-            banned: result.metadata[config_1.USER_METADATA_BAN_STATUS_KEY],
+            status: 'OK',
+            banned: (_a = result.metadata[config_1.USER_METADATA_BAN_STATUS_KEY]) !== null && _a !== void 0 ? _a : false,
         };
     }
     async setBanStatus(userId, isBanned, userContext) {
         await usermetadata_1.default.updateUserMetadata(userId, { [config_1.USER_METADATA_BAN_STATUS_KEY]: !!isBanned }, userContext);
         this.setBanStatusToCache(userId, !!isBanned);
-        return { status: "OK" };
+        return { status: 'OK' };
     }
     setBanStatusToCache(userId, isBanned) {
         this.cache.set(userId, isBanned);
