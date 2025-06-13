@@ -3,9 +3,9 @@
     "target": "ES2017",
     "strictNullChecks": true,
     "declaration": true,
-    "module": "commonJS",
+    "module": "commonjs",
     "outDir": "dist",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "sourceMap": false,
     "noImplicitThis": false,
@@ -20,6 +20,5 @@
     "useUnknownInCatchVariables": false
   },
   "include": ["src/**/*"],
-  "exclude": ["dist"],
-  "compileOnSave": true
+  "exclude": ["dist", "index.js", "index.d.ts"]
 }

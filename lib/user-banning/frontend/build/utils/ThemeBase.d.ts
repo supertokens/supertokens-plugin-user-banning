@@ -1,5 +1,4 @@
-import React from 'react';
-import type { PropsWithChildren } from 'react';
+import { default as React, PropsWithChildren } from 'react';
 export declare const ThemeBase: React.FC<PropsWithChildren<{
-  userStyles: Array<string | undefined>;
+    userStyles: Array<string | undefined>;
 }>>;

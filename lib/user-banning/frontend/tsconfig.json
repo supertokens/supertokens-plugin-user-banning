@@ -1,13 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "noImplicitAny": true,
-    "allowSyntheticDefaultImports": true,
-    "strictNullChecks": true,
-    "noImplicitThis": true,
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "outDir": "build",
-    "moduleResolution": "node",
     "declaration": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
@@ -21,5 +17,6 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["node", "react"]
   },
-  "compileOnSave": true
+  "include": ["src/**/*"],
+  "exclude": ["build"]
 }

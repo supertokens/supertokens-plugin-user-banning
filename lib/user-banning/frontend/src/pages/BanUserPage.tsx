@@ -2,7 +2,8 @@ import React from 'react';
 import { useCallback, useState } from 'react';
 import { useQuerier } from '../utils/querier';
 
-import styles from './style.css';
+// @ts-ignore
+import styles from './style.css?inline';
 import { getErrorMessage, ThemeBase } from '../utils';
 
 // todo: feedback: it would be useful to be able to use the supertokens components (buttons, inputs, boxes, cards, forms, etc).
