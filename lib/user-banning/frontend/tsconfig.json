@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "build",
+    "declaration": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "importHelpers": false,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["node", "react"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["build"]
+}
