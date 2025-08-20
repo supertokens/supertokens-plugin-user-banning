@@ -1,0 +1,24 @@
+{
+  "name": "@supertokens-plugin-user-banning/frontend",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./build/index.js",
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "supertokens-auth-react": ">=0.48.0"
+  },
+  "files": [
+    "build/index.css"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "default": "./build/index.js"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@supertokens-plugin-user-banning/backend",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./build/index.js",
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js",
+      "default": "./build/index.js"
+    }
+  },
+  "peerDependencies": {
+    "supertokens-node": ">=23.0.0"
+  },
+  "dependencies": {}
+}

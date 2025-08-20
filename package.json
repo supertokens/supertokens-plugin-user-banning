@@ -8,9 +8,10 @@
     "pretty": "npx pretty-quick .",
     "build-pretty": "npm run build && npm run pretty && npm run pretty",
     "pretty-check": "npx pretty-quick --check .",
-    "build:backend": "cd lib/user-banning/backend && rm -rf dist && npx tsc -p tsconfig.json",
+    "build:backend": "cd lib/user-banning/backend && rm -rf build && vite build",
     "build:frontend": "cd lib/user-banning/frontend && rm -rf build && vite build"
   },
+  "type": "module",
   "keywords": [
     "user-banning",
     "plugin",
@@ -18,31 +19,44 @@
   ],
   "exports": {
     "./backend": {
-      "types": "./lib/user-banning/backend/dist/index.d.ts",
-      "default": "./lib/user-banning/backend/dist/index.js"
+      "types": "./lib/user-banning/backend/build/index.d.ts",
+      "import": "./lib/user-banning/backend/build/index.js",
+      "default": "./lib/user-banning/backend/build/index.js"
     },
     "./backend/index": {
-      "types": "./lib/user-banning/backend/dist/index.d.ts",
-      "default": "./lib/user-banning/backend/dist/index.js"
+      "types": "./lib/user-banning/backend/build/index.d.ts",
+      "import": "./lib/user-banning/backend/build/index.js",
+      "default": "./lib/user-banning/backend/build/index.js"
     },
     "./backend/index.js": {
-      "types": "./lib/user-banning/backend/dist/index.d.ts",
-      "default": "./lib/user-banning/backend/dist/index.js"
+      "types": "./lib/user-banning/backend/build/index.d.ts",
+      "import": "./lib/user-banning/backend/build/index.js",
+      "default": "./lib/user-banning/backend/build/index.js"
     },
     "./frontend": {
       "types": "./lib/user-banning/frontend/build/index.d.ts",
-      "import": "./lib/user-banning/frontend/build/index.mjs",
-      "require": "./lib/user-banning/frontend/build/index.cjs"
+      "import": "./lib/user-banning/frontend/build/index.js",
+      "default": "./lib/user-banning/frontend/build/index.js"
+    },
+    "./frontend/index": {
+      "types": "./lib/user-banning/frontend/build/index.d.ts",
+      "import": "./lib/user-banning/frontend/build/index.js",
+      "default": "./lib/user-banning/frontend/build/index.js"
+    },
+    "./frontend/index.js": {
+      "types": "./lib/user-banning/frontend/build/index.d.ts",
+      "import": "./lib/user-banning/frontend/build/index.js",
+      "default": "./lib/user-banning/frontend/build/index.js"
     }
   },
   "license": "Apache-2.0",
-  "dependencies": {
-    "supertokens-auth-react": "github:supertokens/supertokens-auth-react#feat/plugin/base",
-    "supertokens-node": "github:supertokens/supertokens-node#feat/plugin/base"
-  },
+  "dependencies": {},
   "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "supertokens-auth-react": ">=0.50.0",
+    "supertokens-web-js": ">=0.16.0",
+    "supertokens-node": ">=23.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.1",
@@ -56,6 +70,7 @@
     "pretty-quick": "^3.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "sinon": "^14.0.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
