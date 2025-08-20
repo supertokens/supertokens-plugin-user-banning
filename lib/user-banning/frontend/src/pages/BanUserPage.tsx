@@ -1,7 +1,8 @@
 import React from 'react';
 import { useCallback, useState } from 'react';
 import { useQuerier } from '../utils/querier';
-
+import { SessionAuth } from 'supertokens-auth-react/recipe/session';
+import { PermissionClaim } from 'supertokens-auth-react/recipe/userroles';
 // @ts-ignore
 import styles from './style.css?inline';
 import { getErrorMessage, ThemeBase } from '../utils';
@@ -104,83 +105,95 @@ export function BanUserPage(props: { apiDomain: string }) {
   );
 
   return (
-    <ThemeBase userStyles={[styles]}>
-      <div className="supertokens-plugin-user-banning">
-        <div className="container">
-          <div className="row">
-            <div className="headerTitle">Ban User</div>
-            <p>
-              This page is used to ban and unban users. It is useful for preventing users from accessing your
-              application.
-            </p>
+    <SessionAuth
+      overrideGlobalClaimValidators={(globalValidators) => [
+        ...globalValidators,
+        {
+          ...PermissionClaim.validators.includes('ban-user'),
+          onFailureRedirection: () => {
+            return '/'; // go back home
+          },
+        },
+      ]}
+    >
+      <ThemeBase userStyles={[styles]}>
+        <div className="supertokens-plugin-user-banning">
+          <div className="container">
+            <div className="row">
+              <div className="headerTitle">Ban User</div>
+              <p>
+                This page is used to ban and unban users. It is useful for preventing users from accessing your
+                application.
+              </p>
 
-            <div className="divider"></div>
+              <div className="divider"></div>
 
-            {!!error && <div className="generalError">{error}</div>}
+              {!!error && <div className="generalError">{error}</div>}
 
-            <form noValidate>
-              <div className="formRow">
-                <div className="label">Tenant ID</div>
-                <div className="inputContainer">
-                  <div className="inputWrapper">
-                    <input
-                      type="text"
-                      value={tenantId}
-                      autoComplete="on"
-                      placeholder="Tenant ID"
-                      onChange={(e) => setTenantId(e.target.value)}
-                    />
+              <form noValidate>
+                <div className="formRow">
+                  <div className="label">Tenant ID</div>
+                  <div className="inputContainer">
+                    <div className="inputWrapper">
+                      <input
+                        type="text"
+                        value={tenantId}
+                        autoComplete="on"
+                        placeholder="Tenant ID"
+                        onChange={(e) => setTenantId(e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="formRow">
-                <div className="label">User Email</div>
-                <div className="inputContainer">
-                  <div className="inputWrapper">
-                    <input
-                      type="email"
-                      value={email}
-                      disabled={!tenantId}
-                      autoComplete="on"
-                      placeholder="User Email"
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
+                <div className="formRow">
+                  <div className="label">User Email</div>
+                  <div className="inputContainer">
+                    <div className="inputWrapper">
+                      <input
+                        type="email"
+                        value={email}
+                        disabled={!tenantId}
+                        autoComplete="on"
+                        placeholder="User Email"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="formRow">
-                <button className="button" onClick={onCheckStatus} disabled={!(!!tenantId && !!email)}>
-                  Check Status (
-                  {typeof banStatus === 'boolean' ? (
-                    banStatus ? (
-                      <span style={{ color: 'red' }}>Banned</span>
+                <div className="formRow">
+                  <button className="button" onClick={onCheckStatus} disabled={!(!!tenantId && !!email)}>
+                    Check Status (
+                    {typeof banStatus === 'boolean' ? (
+                      banStatus ? (
+                        <span style={{ color: 'red' }}>Banned</span>
+                      ) : (
+                        <span style={{ color: 'green' }}>Not Banned</span>
+                      )
                     ) : (
-                      <span style={{ color: 'green' }}>Not Banned</span>
+                      ' - '
+                    )}
                     )
-                  ) : (
-                    ' - '
-                  )}
-                  )
-                </button>
-              </div>
-
-              {typeof banStatus === 'boolean' && (
-                <div className="formRow" style={{ flexDirection: 'row' }}>
-                  <button className="button" disabled={banStatus} onClick={onBanUser} style={{ marginRight: '20px' }}>
-                    Ban
-                  </button>
-
-                  <button className="button" disabled={!banStatus} onClick={onUnbanUser}>
-                    Unban
                   </button>
                 </div>
-              )}
-            </form>
+
+                {typeof banStatus === 'boolean' && (
+                  <div className="formRow" style={{ flexDirection: 'row' }}>
+                    <button className="button" disabled={banStatus} onClick={onBanUser} style={{ marginRight: '20px' }}>
+                      Ban
+                    </button>
+
+                    <button className="button" disabled={!banStatus} onClick={onUnbanUser}>
+                      Unban
+                    </button>
+                  </div>
+                )}
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-    </ThemeBase>
+      </ThemeBase>
+    </SessionAuth>
   );
 }

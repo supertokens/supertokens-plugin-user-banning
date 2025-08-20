@@ -3,7 +3,7 @@ import SuperTokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import { PLUGIN_ID, HANDLE_BASE_PATH, PLUGIN_SDK_VERSION } from './config';
 import { UserBanningService } from './userBanningService';
-// import { isAuthorised, sendUnauthorisedAccess } from "./utils";
+import { PermissionClaim } from 'supertokens-node/recipe/userroles';
 
 // todo: feedback: have more exposed apis from the sdk - can't list users, cant get a user by email (or other fields), etc.
 
@@ -17,13 +17,13 @@ export const init = (): SuperTokensPlugin => {
       {
         path: HANDLE_BASE_PATH + '/ban',
         method: 'post',
+        verifySessionOptions: {
+          sessionRequired: true,
+          overrideGlobalClaimValidators: (globalClaimValidators) => {
+            return [...globalClaimValidators, PermissionClaim.validators.includes('ban-user')];
+          },
+        },
         handler: async (req, res, _, userContext) => {
-          // make sure the user is allowed to ban other users
-          // if (!(await isAuthorised(req, res, "admin"))) {
-          //   sendUnauthorisedAccess(res);
-          //   return null;
-          // }
-
           let tenantId = await req.getKeyValueFromQuery('tenantId');
           if (!tenantId) {
             res.setStatusCode(400);
@@ -97,6 +97,12 @@ export const init = (): SuperTokensPlugin => {
       {
         path: HANDLE_BASE_PATH + '/ban',
         method: 'get',
+        verifySessionOptions: {
+          sessionRequired: true,
+          overrideGlobalClaimValidators: (globalClaimValidators, session, userContext) => {
+            return [...globalClaimValidators, PermissionClaim.validators.includes('ban-user')];
+          },
+        },
         handler: async (req, res, _, userContext) => {
           // make sure the user is allowed to get the ban status
           // if (!(await isAuthorised(req, res, "admin"))) {

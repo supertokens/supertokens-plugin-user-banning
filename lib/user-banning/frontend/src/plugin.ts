@@ -11,7 +11,6 @@ export const init = ({ apiDomain }: { apiDomain: string; websiteDomain: string }
     routeHandlers: [
       {
         path: '/admin/ban-user',
-        // todo: feedback: it would be useful for the handler to have access to the st instance config, otherwise it's not possible to get the base path
         handler: () => BanUserPage.call(null, { apiDomain }),
       },
     ],
